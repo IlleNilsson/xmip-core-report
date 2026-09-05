@@ -1,7 +1,7 @@
 #![forbid(unsafe_code)]
 
 use std::collections::BTreeMap;
-use xmip_core::{JourneyId, MessageId};
+use xcore::{JourneyId, MessageId};
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ReportRecord {
