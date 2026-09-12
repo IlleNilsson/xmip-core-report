@@ -1,2 +1,2 @@
-# xmip-report
+# xmip-core-report
 Produces reportable Xmip data.
