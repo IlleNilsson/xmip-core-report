@@ -11,5 +11,5 @@ report is what a security review board or an auditor reads over a period.
 
 `doc/architecture/observability-model.md` section 8 governs it, and which
 reports exist and how each is derived is `doc/reports.md` beside this file.
-Each format is a technology under this repository; `architecture.toml` names
+Each format is a technology under this repository; `architecture.xmip` names
 them.
