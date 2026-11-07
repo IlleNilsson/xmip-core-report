@@ -2,7 +2,6 @@
 
 Moved here from the estate root on 2026-09-12 (ADR-0020 clause 3: the document lives where its subject lives).
 
-
 `xmip-core-report` answers *what happened over a period*. Four reports, and the
 split between mandatory and optional is the point:
 
@@ -29,3 +28,11 @@ when they wrote it, which is the failure mode this replaces.
 
 Recovered from the `_origins` design export, 2026-08-26.
 
+## Reports and Quests
+
+A Report presents existing data; a Quest probes for data to present in a
+Report (the owner, 2026-11-07; `doc/terminology.md`, *Report and Quest*).
+The Quests the owner named 2026-11-05 — Security, Sanity, Performance,
+Redundancy, Fail Over, Size, Compile Time and Firewall — are not designed
+yet: each one's data and drill-down are asked of the owner before it is
+built.
