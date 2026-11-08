@@ -1,4 +1,21 @@
 #![forbid(unsafe_code)]
+//! What a Report presents, and the Quests that probe for it (ADR-0072).
+//!
+//! A [`ReportRecord`] is a typed record a [`ReportDataSink`] receives. A
+//! [`quest::Quest`] probes an [`quest::Installation`] for data a Report
+//! presents; the first is the Regulation Quest ([`regulation`]), its
+//! regulation a parameter, GDPR ([`gdpr`]) the first of them.
+
+pub mod finding;
+pub mod gdpr;
+pub mod quest;
+pub mod regulation;
+
+pub use finding::{Action, Behind, Finding, State};
+pub use quest::{AtRest, Installation, Quest, Wire};
+pub use regulation::{
+    Found, Probed, Regulation, RegulationQuest, Regulations, Requirement, Row, Tally,
+};
 
 use std::collections::BTreeMap;
 use xcore::{JourneyId, MessageId};
