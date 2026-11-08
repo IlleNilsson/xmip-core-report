@@ -7,10 +7,13 @@ version = "0.1.0"
 edition = "2024"
 license = "AGPL-3.0-or-later"
 repository = "https://github.com/IlleNilsson/xmip-core-report"
-description = "Reportable data contracts for Xmip."
+description = "Reportable data contracts for Xmip, the Quest seam and the Regulation Quest."
 
 [dependencies]
 xcore = { package = "xmip-core", git = "https://github.com/IlleNilsson/xmip-core", branch = "main" }
+# What a Quest probes: a node's configuration, read once, by configure's one
+# model of it (ADR-0072).
+configure = { package = "xmip-core-configure", git = "https://github.com/IlleNilsson/xmip-core-configure", branch = "main" }
 
 [profile.dev.package."*"]
 opt-level = 3

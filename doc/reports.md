@@ -36,3 +36,33 @@ The Quests the owner named 2026-11-05 — Security, Sanity, Performance,
 Redundancy, Fail Over, Size, Compile Time and Firewall — are not designed
 yet: each one's data and drill-down are asked of the owner before it is
 built.
+
+### The Regulation Quest
+
+The first Quest, and the seam every later one uses (ADR-0072). One Quest,
+the regulation its parameter — GDPR, the patient data law, the Cyber
+Resilience Act, NIS2, the AI Act — and a module may add one. For each of the
+regulation's requirements it probes, shows the evidence or the gap or that
+it does not apply, and offers the actions that close a gap; the operator
+applies an action, the Quest never does. It presents evidence and gaps and
+never a verdict: whether an installation meets a regulation is the
+customer's legal judgment (the owner, 2026-11-08).
+
+It reads at three levels (the owner, 2026-11-08):
+
+1. **The regulation**, with a tally of evidence, gaps and not applicable.
+2. **Its requirements**, one row each: the requirement, the article it
+   cites and its state.
+3. **One requirement**, with the Locations, Streams and settings behind it
+   and the actions that close it.
+
+**Derived from configuration.** GDPR, the first regulation, probes what a
+node's configuration says today — encryption at rest from the data domains
+and `[store]`, encryption on each Receive and Send Location's wire as its
+technology declares it, and the audit — and shows each requirement Xmip
+cannot support yet as a gap whose action is *not yet available in Xmip*:
+how long data is kept (a node reads no retention window), erasure and
+finding one data subject's data, masking personal data in logs and traces,
+declaring the flows that carry personal data, and transfers outside the
+European Union. ADR-0072 lists the nine with their articles. No surface
+shows it yet; the ABI, the command line, PowerShell and the GUI follow.
