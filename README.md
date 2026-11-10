@@ -36,4 +36,4 @@ follow, as do the other regulations.
 `doc/architecture/observability-model.md` section 8 governs it, and which
 reports and Quests exist and how each is derived is `doc/reports.md` beside
 this file. Each format is a technology under this repository;
-`architecture.xmip` names them.
+`architecture.toml` names them.
