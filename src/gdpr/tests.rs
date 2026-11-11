@@ -1,73 +1,15 @@
 use std::assert_matches;
-use std::collections::BTreeMap;
 
-use configure::{ConfiguredLocation, XmipConfigurationDocument, parse_toml};
 use xcore::settings::Applies;
 
 use crate::finding::{Action, Behind, State};
-use crate::quest::{AtRest, Installation, Quest, Wire};
-use crate::regulation::{Found, Probed, Regulation, RegulationQuest, Regulations, Tally};
-
-const HEAD: &str = "[service]\nname = \"n\"\ncluster_name = \"c\"\nnode_name = \"d\"\n";
-
-/// An installation as a test composes it: a configuration read from TOML,
-/// each Location's wire by its name, and each domain kept as said.
-struct Composed {
-    configuration: XmipConfigurationDocument,
-    wires: BTreeMap<&'static str, Wire>,
-    at_rest: BTreeMap<&'static str, AtRest>,
-}
-
-impl Composed {
-    fn of(tables: &str) -> Self {
-        Self {
-            configuration: parse_toml(&format!("{HEAD}{tables}")).expect("parses"),
-            wires: BTreeMap::new(),
-            at_rest: BTreeMap::new(),
-        }
-    }
-
-    fn wire(mut self, name: &'static str, wire: Wire) -> Self {
-        self.wires.insert(name, wire);
-        self
-    }
-
-    fn kept(mut self, domain: &'static str, at_rest: AtRest) -> Self {
-        self.at_rest.insert(domain, at_rest);
-        self
-    }
-
-    fn probed(&self) -> Probed {
-        let regulations = Regulations::standard();
-        RegulationQuest::of(&regulations, "GDPR")
-            .expect("held")
-            .probe(self)
-    }
-}
-
-impl Installation for Composed {
-    fn configuration(&self) -> &XmipConfigurationDocument {
-        &self.configuration
-    }
-
-    fn wire(&self, location: &ConfiguredLocation, _: Applies) -> Wire {
-        self.wires
-            .get(location.name.as_str())
-            .copied()
-            .unwrap_or(Wire::Undeclared)
-    }
-
-    fn at_rest(&self, domain: &str) -> AtRest {
-        self.at_rest.get(domain).copied().unwrap_or(AtRest::Sealed)
-    }
-}
+use crate::fixture::{Composed, LOCATIONS};
+use crate::quest::{AtRest, Wire};
+use crate::regulation::{Found, Probed, Regulation, Tally};
 
 fn found<'p>(probed: &'p Probed, name: &str) -> &'p Found {
     probed.requirement(name).expect("a GDPR requirement")
 }
-
-const LOCATIONS: &str = "[[receive_locations]]\nname = \"in\"\naddress = \"https://h/in\"\n\
-                         [[send_locations]]\nname = \"out\"\naddress = \"sftp://h/out\"\n";
 
 #[test]
 fn every_requirement_cites_its_article_and_reads_at_three_levels() {

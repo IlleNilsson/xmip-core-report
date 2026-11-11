@@ -4,17 +4,27 @@
 //! A [`ReportRecord`] is a typed record a [`ReportDataSink`] receives. A
 //! [`quest::Quest`] probes an [`quest::Installation`] for data a Report
 //! presents; the first is the Regulation Quest ([`regulation`]), its
-//! regulation a parameter, GDPR ([`gdpr`]) the first of them.
+//! regulation a parameter, GDPR ([`gdpr`]) the first of them. Every Report
+//! is in one list, [`catalog::Reports`], each saying whether it presents
+//! data that already exists or what a Quest probes first, and [`answer`]
+//! answers the list and one Report opened as `xmip_operate.h` section 25
+//! says (ADR-0072, amendment 2026-11-10).
 
+pub mod answer;
+pub mod catalog;
 pub mod finding;
+#[cfg(test)]
+mod fixture;
 pub mod gdpr;
 pub mod quest;
 pub mod regulation;
 
+pub use catalog::{Data, Kind, LastProbes, Probe, Report, Reports};
 pub use finding::{Action, Behind, Finding, State};
 pub use quest::{AtRest, Installation, Quest, Wire};
 pub use regulation::{
-    Found, Probed, Regulation, RegulationQuest, Regulations, Requirement, Row, Tally,
+    Found, Probed, Regulation, RegulationQuest, RegulationReport, Regulations, Requirement, Row,
+    Tally,
 };
 
 use std::collections::BTreeMap;

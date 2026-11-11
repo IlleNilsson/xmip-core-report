@@ -1,9 +1,10 @@
-use configure::{ConfiguredLocation, XmipConfigurationDocument, parse_toml};
-use xcore::settings::Applies;
+use serde_json::json;
+use xcore::StreamId;
 
-use crate::finding::{Finding, State};
-use crate::quest::{AtRest, Installation, Quest, Wire};
-use crate::regulation::{Regulation, RegulationQuest, Regulations, Requirement};
+use crate::finding::{Behind, Finding, State};
+use crate::fixture::Composed;
+use crate::quest::{Installation, Quest};
+use crate::regulation::{Regulation, RegulationQuest, Regulations, Requirement, answered, behind};
 
 /// A regulation a module adds: one requirement, not applicable anywhere.
 struct Added;
@@ -38,22 +39,6 @@ impl Regulation for Added {
     }
 }
 
-struct Bare(XmipConfigurationDocument);
-
-impl Installation for Bare {
-    fn configuration(&self) -> &XmipConfigurationDocument {
-        &self.0
-    }
-
-    fn wire(&self, _: &ConfiguredLocation, _: Applies) -> Wire {
-        Wire::Undeclared
-    }
-
-    fn at_rest(&self, _: &str) -> AtRest {
-        AtRest::Sealed
-    }
-}
-
 #[test]
 fn a_module_adds_a_regulation_and_the_quest_takes_it_by_name() {
     let regulations = Regulations::standard()
@@ -62,9 +47,7 @@ fn a_module_adds_a_regulation_and_the_quest_takes_it_by_name() {
     assert_eq!(regulations.names().collect::<Vec<_>>(), ["GDPR", "Added"]);
     let quest = RegulationQuest::of(&regulations, "Added").expect("held");
     assert_eq!(quest.name(), "Regulation");
-    let document = parse_toml("[service]\nname = \"n\"\ncluster_name = \"c\"\nnode_name = \"d\"\n")
-        .expect("parses");
-    let probed = quest.probe(&Bare(document));
+    let probed = quest.probe(&Composed::of(""));
     assert_eq!(probed.tally().not_applicable, 1);
     let rows: Vec<_> = probed.rows().collect();
     assert_eq!(rows[0].state, State::NotApplicable);
@@ -83,6 +66,32 @@ fn a_second_regulation_of_one_name_is_refused() {
         .err()
         .expect("refused");
     assert!(refused.contains("'Added'"), "{refused}");
+}
+
+#[test]
+fn the_report_answers_its_tally_in_the_states_words_and_each_behind_its_kind() {
+    let regulations = Regulations::standard()
+        .with(Box::new(Added))
+        .expect("added");
+    let probed = RegulationQuest::of(&regulations, "Added")
+        .expect("held")
+        .probe(&Composed::of(""));
+    let found = answered(&probed, Some("Nowhere")).expect("answered");
+    assert_eq!(
+        found["tally"],
+        json!([
+            { "state": "evidence", "count": 0 },
+            { "state": "gap", "count": 0 },
+            { "state": "not applicable", "count": 1 },
+        ])
+    );
+    assert_eq!(found["requirement"]["state"], "not applicable");
+    let refused = answered(&probed, Some("Elsewhere")).expect_err("no such row");
+    assert!(refused.contains("there are: Nowhere"), "{refused}");
+    assert_eq!(
+        behind(&Behind::Stream(StreamId::new(1))),
+        json!({ "kind": "stream", "stream": StreamId::new(1).to_string() })
+    );
 }
 
 #[test]

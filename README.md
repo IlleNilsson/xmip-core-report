@@ -30,10 +30,46 @@ for row in probed.rows() { /* name, citation, state */ }  // its requirements
 let one = probed.requirement("Encryption at rest");       // one requirement
 ```
 
-No surface shows it yet: the C ABI, the command line, PowerShell and the GUI
-follow, as do the other regulations.
+**Every Report in one list** (ADR-0072, amendment 2026-11-10). `Reports`
+(`catalog.rs`) is the list, Xmip's own in `Reports::standard()` and a
+module's added with `Reports::with`; a `Report` has a name, what it covers,
+and its `Data`. Its kind follows from that data and nothing else:
+`Data::Existing` presents data that already exists — `Kind::ExistingData`,
+shown *Quick* — named by the `xmip_operate.h` entrypoint of the reader that
+presents it, and `Data::Quest` presents what a Quest probes first —
+`Kind::Quest`, shown *Takes longer* — through a `Probe`, a Quest as a list
+holds it: its parameter and choices, what a row of its second level is
+called, its levels, and `open`. Either holds `None` where it is not built
+yet, and the entry is listed and says *not yet available*. The Regulation
+Quest is listed as the Regulation Report, `RegulationReport`, its parameter
+the regulation and its row a requirement; the JSON it answers, its tally
+each state's words and count, is shaped in `regulation.rs` beside its
+Quest, the example a module's Quest follows. `answer.rs` answers the list,
+or one entry of it by name, and one Report opened as JSON, as
+`xmip_operate.h` section 25 says: each kind's words, and for each entry
+what to expect — a Quest's last probe, as `LastProbes` says it, handed in by
+whoever keeps the record, or that it could not be read, every Report listed
+all the same; an opened Report says what a row is called.
+`answer::probe_of` is every refusal of an open that needs no installation —
+a name that is none, in the one sentence the list refuses it in too, a
+Report not yet available or quick, a parameter it does not take — so a
+caller refuses before it reads anything. Six Reports are quick (Audit,
+Dead Messages, Locations, Subscriptions; Parties and Expiring certificates
+and secrets not yet available) and ten take longer (Regulation; Firewall,
+Identity and isolation — ADR-0022 clause 5's, mandatory with the
+Firewall's — Security, Sanity, Performance, Redundancy, Fail Over, Size and
+Compile Time not yet available).
+
+The runtime's library (`xmip-core-runtime`, `src/report.rs`) serves the
+list through `xmip_report_v1`, composing what a Quest probes from a node's
+configuration and recording each probe in the audit, whose last record of
+each is the time to expect. Every .NET surface reads it through
+`ReportCatalog` in `Xmip.Surface` (`xmip-core-abi`): the command line as
+`xmip report`, PowerShell as `Get-XmipReport`, and the GUI, the web's and
+the desktop's alike, as the Reports view (`/reports`), each kind shown by a
+plain icon beside its name.
 
 `doc/architecture/observability-model.md` section 8 governs it, and which
-reports and Quests exist and how each is derived is `doc/reports.md` beside
+Reports and Quests exist and how each is derived is `doc/reports.md` beside
 this file. Each format is a technology under this repository;
 `architecture.toml` names them.

@@ -7,11 +7,28 @@
 //! one by handing its own to [`Regulations::with`]. What the Quest finds
 //! reads at three levels (the owner, 2026-11-08): the regulation with its
 //! [`Tally`], its requirements one [`Row`] each, and one requirement,
-//! [`Found`], with what is behind it and the actions that close it.
+//! [`Found`], with what is behind it and the actions that close it. The list
+//! of every Report holds it as the Regulation Report, [`RegulationReport`]
+//! (ADR-0072, amendment 2026-11-10), which presents what the Quest finds as
+//! the JSON `xmip_operate.h` section 25 names: the worked example of a
+//! Quest's answer, beside its Quest.
 
-use crate::finding::{Finding, State};
+use serde_json::{Value, json};
+
+use crate::catalog::{Data, Probe, Report};
+use crate::finding::{Action, Behind, Finding, State};
 use crate::gdpr::Gdpr;
 use crate::quest::{Installation, Quest};
+
+/// The Regulation Quest's name, and the Regulation Report's.
+pub const NAME: &str = "Regulation";
+
+/// The Regulation Report's levels (the owner, 2026-11-08).
+const LEVELS: &[&str] = &[
+    "the regulation, with its tally",
+    "a row per requirement",
+    "one requirement in full",
+];
 
 /// A regulation: its name, the parameter an operator gives the Quest, and
 /// its requirements.
@@ -114,7 +131,7 @@ impl Quest for RegulationQuest<'_> {
     type Found = Probed;
 
     fn name(&self) -> &'static str {
-        "Regulation"
+        NAME
     }
 
     fn probe(&self, installation: &dyn Installation) -> Probed {
@@ -210,6 +227,139 @@ impl Probed {
     #[must_use]
     pub fn requirement(&self, name: &str) -> Option<&Found> {
         self.found.iter().find(|found| found.name == name)
+    }
+}
+
+/// The Regulation Report: what the Regulation Quest probes, its parameter
+/// the regulation and a row of its second level a requirement.
+pub struct RegulationReport {
+    regulations: Regulations,
+}
+
+impl RegulationReport {
+    /// The Report over `regulations`.
+    #[must_use]
+    pub const fn new(regulations: Regulations) -> Self {
+        Self { regulations }
+    }
+}
+
+impl Default for RegulationReport {
+    /// Over Xmip's own regulations.
+    fn default() -> Self {
+        Self::new(Regulations::standard())
+    }
+}
+
+impl Report for RegulationReport {
+    fn name(&self) -> &'static str {
+        NAME
+    }
+
+    fn covers(&self) -> &'static str {
+        "For each requirement of a regulation, the evidence or the gap a node's configuration \
+         shows, and the actions that close a gap."
+    }
+
+    fn data(&self) -> Data<'_> {
+        Data::Quest(Some(self))
+    }
+}
+
+impl Probe for RegulationReport {
+    fn parameter(&self) -> Option<(&str, Vec<&str>)> {
+        Some(("regulation", self.regulations.names().collect()))
+    }
+
+    fn row(&self) -> &'static str {
+        "requirement"
+    }
+
+    fn levels(&self) -> &[&str] {
+        LEVELS
+    }
+
+    fn open(
+        &self,
+        installation: &dyn Installation,
+        parameter: Option<&str>,
+        row: Option<&str>,
+    ) -> Result<Value, String> {
+        let quest = RegulationQuest::of(&self.regulations, parameter.unwrap_or_default())?;
+        answered(&quest.probe(installation), row)
+    }
+}
+
+/// What the Regulation Quest found: the regulation with its tally, each
+/// state's words and count, and a row per requirement; and the requirement
+/// named `row` in full where one is.
+///
+/// # Errors
+/// Where no requirement is named `row`, naming those there are.
+fn answered(probed: &Probed, row: Option<&str>) -> Result<Value, String> {
+    let tally = probed.tally();
+    let counted = [
+        (State::Evidence, tally.evidence),
+        (State::Gap, tally.gap),
+        (State::NotApplicable, tally.not_applicable),
+    ];
+    let rows: Vec<Value> = probed
+        .rows()
+        .map(
+            |row| json!({ "name": row.name, "citation": row.citation, "state": row.state.words() }),
+        )
+        .collect();
+    let mut found = json!({
+        "title": probed.title(),
+        "tally": counted
+            .iter()
+            .map(|(state, count)| json!({ "state": state.words(), "count": count }))
+            .collect::<Vec<_>>(),
+        "rows": rows,
+    });
+    if let Some(name) = row {
+        let one = probed.requirement(name).ok_or_else(|| {
+            let names: Vec<&str> = probed.rows().map(|row| row.name).collect();
+            format!(
+                "no requirement of {} is named '{name}'; there are: {}",
+                probed.regulation(),
+                names.join(", ")
+            )
+        })?;
+        found["requirement"] = requirement(one);
+    }
+    Ok(found)
+}
+
+/// One requirement in full: what was found, what is behind it and the
+/// actions that close it.
+fn requirement(found: &Found) -> Value {
+    let finding = &found.finding;
+    json!({
+        "name": found.name, "citation": found.citation, "state": finding.state().words(),
+        "says": finding.says(),
+        "behind": finding.behind().iter().map(behind).collect::<Vec<_>>(),
+        "actions": finding.actions().iter().map(action).collect::<Vec<_>>(),
+    })
+}
+
+fn behind(behind: &Behind) -> Value {
+    match behind {
+        Behind::Location { side, name } => {
+            json!({ "kind": "location", "side": side.word(), "name": name })
+        }
+        Behind::Stream(stream) => json!({ "kind": "stream", "stream": stream.to_string() }),
+        Behind::Setting { key, value } => json!({ "kind": "setting", "key": key, "value": value }),
+    }
+}
+
+fn action(action: &Action) -> Value {
+    match action {
+        Action::Configure { setting, says } => {
+            json!({ "kind": "configure", "setting": setting, "says": says })
+        }
+        Action::Outside { says } => json!({ "kind": "outside", "says": says }),
+        Action::NotYetAvailable { says } => json!({ "kind": "not-yet-available", "says": says }),
     }
 }
 

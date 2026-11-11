@@ -7,13 +7,20 @@ version = "0.1.0"
 edition = "2024"
 license = "AGPL-3.0-or-later"
 repository = "https://github.com/IlleNilsson/xmip-core-report"
-description = "Reportable data contracts for Xmip, the Quest seam and the Regulation Quest."
+description = "Reportable data contracts for Xmip, every Report in one list, the Quest seam and the Regulation Quest."
 
 [dependencies]
 xcore = { package = "xmip-core", git = "https://github.com/IlleNilsson/xmip-core", branch = "main" }
 # What a Quest probes: a node's configuration, read once, by configure's one
 # model of it (ADR-0072).
 configure = { package = "xmip-core-configure", git = "https://github.com/IlleNilsson/xmip-core-configure", branch = "main" }
+# The list of every Report (ADR-0072, amendment 2026-11-10): a quick
+# Report's reader named by its entrypoint, and each kind by its number in
+# xmip_operate.h section 25, both as the header declares them.
+abi = { package = "xmip-core-abi", git = "https://github.com/IlleNilsson/xmip-core-abi", branch = "main" }
+# The list and what a Quest found, answered as the header's JSON, in memory
+# only (ADR-0031 clause 2).
+serde_json = "1"
 
 [profile.dev.package."*"]
 opt-level = 3
