@@ -71,8 +71,8 @@ fn the_kind_follows_from_what_a_report_holds() {
     assert!(existing.data().available());
     assert!(!Data::Existing(None).available());
     assert_eq!(Kind::Quest.word(), "quest");
-    assert_eq!(Kind::ExistingData.name(), "Quick");
-    assert_eq!(Kind::Quest.name(), "Takes longer");
+    assert_eq!(Kind::ExistingData.name(), "Report");
+    assert_eq!(Kind::Quest.name(), "Probing report");
 }
 
 #[test]

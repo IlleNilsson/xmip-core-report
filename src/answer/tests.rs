@@ -47,9 +47,9 @@ fn the_list_says_each_kind_in_words_and_each_entry_its_kind() {
     assert_eq!(
         list["kinds"],
         json!([
-            { "kind": 0, "word": "existing-data", "name": "Quick",
+            { "kind": 0, "word": "existing-data", "name": "Report",
               "meaning": "Presents data that already exists" },
-            { "kind": 1, "word": "quest", "name": "Takes longer",
+            { "kind": 1, "word": "quest", "name": "Probing report",
               "meaning": "Presents what a Quest probes first" },
         ])
     );
