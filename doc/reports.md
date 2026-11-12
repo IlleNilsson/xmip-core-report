@@ -8,13 +8,15 @@ installation shows* when a Quest probes it.
 A Report presents existing data; a Quest probes for data to present in a
 Report (the owner, 2026-11-07; `doc/terminology.md`, *Report and Quest*).
 Every Report is in one list, on every surface, and each says which of the
-two it is with a small icon and its words (the owner, 2026-11-10: *I just
-want the user to know that a report may go quicker than a report based on
-quests*; ADR-0072, amendment 2026-11-10):
+two it is: a small icon where a surface draws one, its name where a surface
+shows text (the owner, 2026-11-10: *I just want the user to know that a
+report may go quicker than a report based on quests*; 2026-11-12: *Report
+icon and a Probing report icon, not the text*; ADR-0072, amendments
+2026-11-10 and 2026-11-12):
 
-- **Quick** — it presents data that already exists: what Xmip keeps, read
+- **Report** — it presents data that already exists: what Xmip keeps, read
   as it is.
-- **Takes longer** — it presents what a Quest probes first. Its entry shows
+- **Probing report** — it presents what a Quest probes first. Its entry shows
   how long its last probe took, as the time to expect, or that it has not
   been probed yet.
 
@@ -26,16 +28,16 @@ entry not built yet is listed and says *not yet available*. The list is
 
 | Report | Kind | Covers | Available |
 | --- | --- | --- | --- |
-| Audit | Quick | What every Xmip program recorded, with each record's severity (information, warning or error), action and phase, over a time range. | Yes, presented by the audit's reader (`xmip_audit_read_v1`) |
-| Dead Messages | Quick | The Messages no Subscription matched, kept in each node's Dead Message Queue. | Yes (`xmip_dead_messages_v1`) |
-| Locations | Quick | Every Receive and Send Location each node runs, as configured. | Yes, the scope tree (`xmip_publication_read_v1`) |
-| Subscriptions | Quick | The Subscriptions each node routes by, and whether each is paused. | Yes (`xmip_subscriptions_v1`) |
-| Parties | Quick | The Parties each node recognizes, with the identities each is recognized by and presented with. | Not yet: no reader presents them; the Topology draws them |
-| Expiring certificates and secrets | Quick | The certificates and secrets each node holds, and when each expires. | Not yet |
-| Regulation | Takes longer | For each requirement of a regulation, the evidence or the gap a node's configuration shows, and the actions that close a gap. | Yes, below |
-| Firewall | Takes longer | Every TCP and UDP port, every path a file-based Location touches and every protocol a node opens or reaches, inbound and outbound. | Not yet |
-| Identity and isolation | Takes longer | Every identity context, its class and where it runs, and every isolation rule evaluated on it with its result. | Not yet |
-| Security, Sanity, Performance, Redundancy, Fail Over, Size, Compile Time | Takes longer | What it probes is not designed yet. | Not yet: named by the owner 2026-11-05; each one's data and drill-down are asked of the owner before it is built |
+| Audit | Report | What every Xmip program recorded, with each record's severity (information, warning or error), action and phase, over a time range. | Yes, presented by the audit's reader (`xmip_audit_read_v1`) |
+| Dead Messages | Report | The Messages no Subscription matched, kept in each node's Dead Message Queue. | Yes (`xmip_dead_messages_v1`) |
+| Locations | Report | Every Receive and Send Location each node runs, as configured. | Yes, the scope tree (`xmip_publication_read_v1`) |
+| Subscriptions | Report | The Subscriptions each node routes by, and whether each is paused. | Yes (`xmip_subscriptions_v1`) |
+| Parties | Report | The Parties each node recognizes, with the identities each is recognized by and presented with. | Not yet: no reader presents them; the Topology draws them |
+| Expiring certificates and secrets | Report | The certificates and secrets each node holds, and when each expires. | Not yet |
+| Regulation | Probing report | For each requirement of a regulation, the evidence or the gap a node's configuration shows, and the actions that close a gap. | Yes, below |
+| Firewall | Probing report | Every TCP and UDP port, every path a file-based Location touches and every protocol a node opens or reaches, inbound and outbound. | Not yet |
+| Identity and isolation | Probing report | Every identity context, its class and where it runs, and every isolation rule evaluated on it with its result. | Not yet |
+| Security, Sanity, Performance, Redundancy, Fail Over, Size, Compile Time | Probing report | What it probes is not designed yet. | Not yet: named by the owner 2026-11-05; each one's data and drill-down are asked of the owner before it is built |
 
 Two are mandatory: the Firewall Report and the Identity and isolation
 Report (ADR-0022 clause 5). A security review board asks for the first

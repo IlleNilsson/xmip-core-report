@@ -35,9 +35,9 @@ let one = probed.requirement("Encryption at rest");       // one requirement
 module's added with `Reports::with`; a `Report` has a name, what it covers,
 and its `Data`. Its kind follows from that data and nothing else:
 `Data::Existing` presents data that already exists — `Kind::ExistingData`,
-shown *Quick* — named by the `xmip_operate.h` entrypoint of the reader that
+shown *Report* — named by the `xmip_operate.h` entrypoint of the reader that
 presents it, and `Data::Quest` presents what a Quest probes first —
-`Kind::Quest`, shown *Takes longer* — through a `Probe`, a Quest as a list
+`Kind::Quest`, shown *Probing report* — through a `Probe`, a Quest as a list
 holds it: its parameter and choices, what a row of its second level is
 called, its levels, and `open`. Either holds `None` where it is not built
 yet, and the entry is listed and says *not yet available*. The Regulation

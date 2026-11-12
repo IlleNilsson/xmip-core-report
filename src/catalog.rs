@@ -47,12 +47,13 @@ impl Kind {
         }
     }
 
-    /// Its name, as a surface shows it beside its icon.
+    /// Its name: what its icon is called, which a text surface shows in
+    /// its place.
     #[must_use]
     pub const fn name(self) -> &'static str {
         match self {
-            Self::ExistingData => "Quick",
-            Self::Quest => "Takes longer",
+            Self::ExistingData => "Report",
+            Self::Quest => "Probing report",
         }
     }
 
