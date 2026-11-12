@@ -1,4 +1,4 @@
-use abi::operate::{audit, dead_message, publication, subscription};
+use abi::operate::{audit, dead_message};
 
 use crate::catalog::{Data, Kind, Report, Reports};
 
@@ -34,25 +34,20 @@ fn the_standard_list_holds_every_report_quick_first() {
         [
             "Audit",
             "Dead Messages",
-            "Locations",
-            "Subscriptions",
-            "Parties",
+            "Throughput and latency",
+            "Capacity",
             "Expiring certificates and secrets",
+            "Parties",
             "Regulation",
             "Firewall",
-            "Identity and isolation",
             "Security",
-            "Sanity",
-            "Performance",
-            "Redundancy",
-            "Fail Over",
-            "Size",
-            "Compile Time",
+            "Resilience",
+            "Dependency",
         ]
     );
     let kinds: Vec<Kind> = reports.iter().map(|held| held.data().kind()).collect();
     assert_eq!(kinds[..6], [Kind::ExistingData; 6]);
-    assert_eq!(kinds[6..], [Kind::Quest; 10]);
+    assert_eq!(kinds[6..], [Kind::Quest; 5]);
 }
 
 #[test]
@@ -119,24 +114,19 @@ fn every_quest_but_the_regulation_and_two_quick_reports_are_not_yet_available() 
     assert_eq!(
         unavailable,
         [
-            "Parties",
+            "Throughput and latency",
+            "Capacity",
             "Expiring certificates and secrets",
+            "Parties",
             "Firewall",
-            "Identity and isolation",
             "Security",
-            "Sanity",
-            "Performance",
-            "Redundancy",
-            "Fail Over",
-            "Size",
-            "Compile Time",
+            "Resilience",
+            "Dependency",
         ]
     );
     for (name, reader) in [
         ("Audit", audit::AUDIT_READ_ENTRYPOINT),
         ("Dead Messages", dead_message::DEAD_MESSAGES_ENTRYPOINT),
-        ("Locations", publication::READ_ENTRYPOINT),
-        ("Subscriptions", subscription::SUBSCRIPTIONS_ENTRYPOINT),
     ] {
         let held = reports.named(name).expect("listed");
         assert!(

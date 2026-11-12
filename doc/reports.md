@@ -30,17 +30,24 @@ entry not built yet is listed and says *not yet available*. The list is
 | --- | --- | --- | --- |
 | Audit | Report | What every Xmip program recorded, with each record's severity (information, warning or error), action and phase, over a time range. | Yes, presented by the audit's reader (`xmip_audit_read_v1`) |
 | Dead Messages | Report | The Messages no Subscription matched, kept in each node's Dead Message Queue. | Yes (`xmip_dead_messages_v1`) |
-| Locations | Report | Every Receive and Send Location each node runs, as configured. | Yes, the scope tree (`xmip_publication_read_v1`) |
-| Subscriptions | Report | The Subscriptions each node routes by, and whether each is paused. | Yes (`xmip_subscriptions_v1`) |
-| Parties | Report | The Parties each node recognizes, with the identities each is recognized by and presented with. | Not yet: no reader presents them; the Topology draws them |
+| Throughput and latency | Report | Each integration's deliveries and the time from a document's drop to its arrival, and each send's steps, as the nodes measured them. | Not yet: the nodes measure it; no reader presents it as a Report |
+| Capacity | Report | Each Storage node's size, each queue's depth, and how fast each grows. | Not yet |
 | Expiring certificates and secrets | Report | The certificates and secrets each node holds, and when each expires. | Not yet |
+| Parties | Report | The Parties each node recognizes, with the identities each is recognized by and presented with. | Not yet: no reader presents them; the Topology draws them |
 | Regulation | Probing report | For each requirement of a regulation, the evidence or the gap a node's configuration shows, and the actions that close a gap. | Yes, below |
 | Firewall | Probing report | Every TCP and UDP port, every path a file-based Location touches and every protocol a node opens or reaches, inbound and outbound. | Not yet |
-| Identity and isolation | Probing report | Every identity context, its class and where it runs, and every isolation rule evaluated on it with its result. | Not yet |
-| Security, Sanity, Performance, Redundancy, Fail Over, Size, Compile Time | Probing report | What it probes is not designed yet. | Not yet: named by the owner 2026-11-05; each one's data and drill-down are asked of the owner before it is built |
+| Security | Probing report | Every identity context, its class and where it runs, and every isolation rule evaluated on it with its result. | Not yet |
+| Resilience | Probing report | Every single point of failure, each standby's lag behind its primary, and what a failover would lose. | Not yet |
+| Dependency | Probing report | How each integration is connected within Xmip, and every gap in it with the action that closes it. | Not yet: decided (ADR-0072, amendment 2026-11-11) |
 
-Two are mandatory: the Firewall Report and the Identity and isolation
-Report (ADR-0022 clause 5). A security review board asks for the first
+What an operator or an auditor asks is in the list, never a second copy of
+a view: the Locations and the Subscriptions are their own views, and were
+taken out of the list on 2026-11-12 (the owner, the same day: *lets reflect
+over what is actually needed. Compile Time we can drop*; ADR-0072,
+amendment 2026-11-12).
+
+Two are mandatory: the Firewall Report and the Security Report, whose
+identity and isolation ADR-0022 clause 5 requires. A security review board asks for the first
 before Xmip is permitted onto a network, and an auditor for the second
 after something has gone wrong; neither knows to ask for a report by name,
 and a report that must be requested before it exists is a report nobody
@@ -68,7 +75,7 @@ what someone believed the estate did when they wrote it, which is the
 failure mode this replaces. Recovered from the `_origins` design export,
 2026-08-26; its Quest is not built yet.
 
-## The Identity and isolation Report
+## The Security Report: identity and isolation
 
 An auditor asks for it after something has gone wrong, and an isolation
 violation that blocked a node's start appears in it (ADR-0022 clause 5). It
