@@ -3,14 +3,14 @@
 //!
 //! A Report presents existing data; a Quest probes for data to present in
 //! a Report (`doc/terminology.md`, *Report and Quest*). A Report of what
-//! Xmip already keeps — the audit, the Dead Message Queue, the
-//! configuration — is quick; one of what a Quest probes first takes longer.
+//! Xmip already keeps — the audit, the Dead Message Queue, what the nodes
+//! measured — is quick; one of what a Quest probes first takes longer.
 //! Which a Report is follows from what it holds, its [`Data`]: nothing
 //! declares a kind of its own and nothing reads one from a name. Xmip's own
 //! are [`Reports::standard`], and a module adds a Report or a Quest with
 //! [`Reports::with`]. A Report not built yet is listed and says so.
 
-use abi::operate::{audit, dead_message, publication, report, subscription};
+use abi::operate::{audit, dead_message, report};
 use serde_json::Value;
 
 use crate::quest::Installation;
@@ -178,10 +178,9 @@ impl Report for Own {
     }
 }
 
-/// What a Quest covers that is named and not designed yet.
-const UNDESIGNED: &str = "What it probes is not designed yet.";
-
-/// Xmip's own quick Reports, in the order the list shows them.
+/// Xmip's own Reports of data that already exists, in the order the list
+/// shows them (ADR-0072, amendment 2026-11-12: what an operator or an
+/// auditor asks, never a second copy of a view).
 const QUICK: [Own; 6] = [
     Own {
         name: "Audit",
@@ -195,19 +194,14 @@ const QUICK: [Own; 6] = [
         data: Data::Existing(Some(dead_message::DEAD_MESSAGES_ENTRYPOINT)),
     },
     Own {
-        name: "Locations",
-        covers: "Every Receive and Send Location each node runs, as configured.",
-        data: Data::Existing(Some(publication::READ_ENTRYPOINT)),
+        name: "Throughput and latency",
+        covers: "Each integration's deliveries and the time from a document's drop to its \
+                 arrival, and each send's steps, as the nodes measured them.",
+        data: Data::Existing(None),
     },
     Own {
-        name: "Subscriptions",
-        covers: "The Subscriptions each node routes by, and whether each is paused.",
-        data: Data::Existing(Some(subscription::SUBSCRIPTIONS_ENTRYPOINT)),
-    },
-    Own {
-        name: "Parties",
-        covers: "The Parties each node recognizes, with the identities each is recognized by \
-                 and presented with.",
+        name: "Capacity",
+        covers: "Each Storage node's size, each queue's depth, and how fast each grows.",
         data: Data::Existing(None),
     },
     Own {
@@ -215,14 +209,21 @@ const QUICK: [Own; 6] = [
         covers: "The certificates and secrets each node holds, and when each expires.",
         data: Data::Existing(None),
     },
+    Own {
+        name: "Parties",
+        covers: "The Parties each node recognizes, with the identities each is recognized by \
+                 and presented with.",
+        data: Data::Existing(None),
+    },
 ];
 
 /// Xmip's own Reports a Quest probes for after the Regulation Report, in
-/// the order the list shows them: none built yet. The Identity and
-/// isolation Report is computed from each identity context and the
-/// isolation rules evaluated on it (ADR-0022 clause 5), so a Quest probes
-/// for it.
-const QUESTS: [Own; 9] = [
+/// the order the list shows them: none built yet. Security takes in each
+/// identity context and the isolation rules evaluated on it (ADR-0022
+/// clause 5); Resilience what Redundancy and Fail Over were named for; the
+/// Dependency Quest every gap per integration (ADR-0072, amendment
+/// 2026-11-11), what Sanity was named for.
+const QUESTS: [Own; 4] = [
     Own {
         name: "Firewall",
         covers: "Every TCP and UDP port, every path a file-based Location touches and every \
@@ -230,44 +231,21 @@ const QUESTS: [Own; 9] = [
         data: Data::Quest(None),
     },
     Own {
-        name: "Identity and isolation",
+        name: "Security",
         covers: "Every identity context, its class and where it runs, and every isolation \
                  rule evaluated on it with its result.",
         data: Data::Quest(None),
     },
     Own {
-        name: "Security",
-        covers: UNDESIGNED,
+        name: "Resilience",
+        covers: "Every single point of failure, each standby's lag behind its primary, and \
+                 what a failover would lose.",
         data: Data::Quest(None),
     },
     Own {
-        name: "Sanity",
-        covers: UNDESIGNED,
-        data: Data::Quest(None),
-    },
-    Own {
-        name: "Performance",
-        covers: UNDESIGNED,
-        data: Data::Quest(None),
-    },
-    Own {
-        name: "Redundancy",
-        covers: UNDESIGNED,
-        data: Data::Quest(None),
-    },
-    Own {
-        name: "Fail Over",
-        covers: UNDESIGNED,
-        data: Data::Quest(None),
-    },
-    Own {
-        name: "Size",
-        covers: UNDESIGNED,
-        data: Data::Quest(None),
-    },
-    Own {
-        name: "Compile Time",
-        covers: UNDESIGNED,
+        name: "Dependency",
+        covers: "How each integration is connected within Xmip, and every gap in it with the \
+                 action that closes it.",
         data: Data::Quest(None),
     },
 ];

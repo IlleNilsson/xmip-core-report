@@ -54,11 +54,11 @@ all the same; an opened Report says what a row is called.
 a name that is none, in the one sentence the list refuses it in too, a
 Report not yet available or quick, a parameter it does not take — so a
 caller refuses before it reads anything. Six Reports are quick (Audit,
-Dead Messages, Locations, Subscriptions; Parties and Expiring certificates
-and secrets not yet available) and ten take longer (Regulation; Firewall,
-Identity and isolation — ADR-0022 clause 5's, mandatory with the
-Firewall's — Security, Sanity, Performance, Redundancy, Fail Over, Size and
-Compile Time not yet available).
+Dead Messages; Throughput and latency, Capacity, Expiring certificates and
+secrets and Parties not yet available) and five take longer (Regulation;
+Firewall and Security — mandatory, Security's identity and isolation
+ADR-0022 clause 5's — Resilience and Dependency not yet available; ADR-0072,
+amendment 2026-11-12).
 
 The runtime's library (`xmip-core-runtime`, `src/report.rs`) serves the
 list through `xmip_report_v1`, composing what a Quest probes from a node's
