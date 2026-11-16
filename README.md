@@ -64,7 +64,7 @@ The runtime's library (`xmip-core-runtime`, `src/report.rs`) serves the
 list through `xmip_report_v1`, composing what a Quest probes from a node's
 configuration and recording each probe in the audit, whose last record of
 each is the time to expect. Every .NET surface reads it through
-`ReportCatalog` in `Xmip.Surface` (`xmip-core-abi`): the command line as
+`ReportCatalog` in `Xmip.Surface` (`xmip-core-operate`): the command line as
 `xmip report`, PowerShell as `Get-XmipReport`, and the GUI, the web's and
 the desktop's alike, as the Reports view (`/reports`), each kind shown by a
 plain icon beside its name.
