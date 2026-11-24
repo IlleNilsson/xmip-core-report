@@ -2,9 +2,9 @@
 //!
 //! A Report presents existing data; a Quest probes for data to present in
 //! a Report (the owner, 2026-11-07; `doc/terminology.md`, *Report and
-//! Quest*). Every Quest — the Regulation Quest first, then the Security,
-//! Sanity, Performance, Redundancy, Fail Over, Size, Compile Time and
-//! Firewall Quests — is a [`Quest`], and probes an [`Installation`] handed to
+//! Quest*). Every Quest — the Regulation Quest first, then the Firewall,
+//! Security, Resilience and Dependency Quests (ADR-0072, amendment
+//! 2026-11-12) — is a [`Quest`], and probes an [`Installation`] handed to
 //! it (ADR-0068). A Quest reads what it probes and changes nothing: the
 //! actions it offers are the operator's to apply.
 
