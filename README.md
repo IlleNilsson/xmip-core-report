@@ -63,11 +63,11 @@ amendment 2026-11-12).
 The runtime's library (`xmip-core-runtime`, `src/report.rs`) serves the
 list through `xmip_report_v1`, composing what a Quest probes from a node's
 configuration and recording each probe in the audit, whose last record of
-each is the time to expect. Every .NET surface reads it through
-`ReportCatalog` in `Xmip.Surface` (`xmip-core-operate`): the command line as
-`xmip report`, PowerShell as `Get-XmipReport`, and the GUI, the web's and
-the desktop's alike, as the Reports view (`/reports`), each kind shown by a
-plain icon beside its name.
+each is the time to expect. The command line, which is Rust, reads it from
+the runtime itself as `xmip report`; every .NET surface reads it through
+`ReportCatalog` in `Xmip.Surface` (`xmip-core-operate`): PowerShell as
+`Get-XmipReport`, and the GUI, the web's and the desktop's alike, as the
+Reports view (`/reports`), each kind shown by a plain icon beside its name.
 
 `doc/architecture/observability-model.md` section 8 governs it, and which
 Reports and Quests exist and how each is derived is `doc/reports.md` beside
