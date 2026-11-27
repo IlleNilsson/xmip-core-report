@@ -1,8 +1,8 @@
 [package]
 name = "xmip-core-report"
-version = "0.1.0"
-edition = "2024"
-license = "AGPL-3.0-or-later"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
 repository = "https://github.com/IlleNilsson/xmip-core-report"
 description = "Reportable data contracts for Xmip, every Report in one list, the Quest seam and the Regulation Quest."
 
@@ -18,3 +18,5 @@ abi = { package = "xmip-core-abi", git = "https://github.com/IlleNilsson/xmip-co
 # The list and what a Quest found, answered as the header's JSON, in memory
 # only (ADR-0031 clause 2).
 serde_json = "1"
+
+[lints]
